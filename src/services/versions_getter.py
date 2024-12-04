@@ -14,6 +14,7 @@ URL_SITE = 'https://portaldarede.intranet.bb.com.br/varejo/artigos/'
 async def _get_one_card_data(card_number: int, client: httpx.AsyncClient):
     """Busca dados de um card no site."""
     url = f'{URL_API}/{card_number}'
+
     response = await client.get(url)
     if response.status_code != httpx.codes.OK:
         return None
@@ -62,6 +63,8 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient):
     )
 
     ic_df['LINK_CARD'] = URL_SITE + ic_df['CD_CARD'].astype(str)
+    ic_df.fillna({'SITE_VERS': -1}, inplace=True)
+    ic_df = ic_df.sort_values(by='CD_CARD')
 
     return ic_df.to_dict(orient='records')
 
