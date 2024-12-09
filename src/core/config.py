@@ -11,3 +11,5 @@ class Settings(BaseSettings):
     DB2_PORT: int
     DB2_USER: str
     DB2_PASS: str
+
+    API_ACESS_CODE: str

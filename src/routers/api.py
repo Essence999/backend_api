@@ -1,0 +1,26 @@
+from fastapi import APIRouter, Depends, Request
+from fastapi.responses import JSONResponse
+from httpx import codes
+from sqlalchemy.orm import Session
+
+from src.core.database import get_db
+from src.services.versions_getter import get_all_versions_data
+
+router = APIRouter(prefix='/api')
+
+
+@router.get('/versoes', status_code=codes.OK)
+async def get_versions_data(
+    request: Request,
+    session: Session = Depends(get_db),
+):
+    """Endpoint para mostrar dados dos cartões em JSON."""
+    token = request.state.token
+    data = await get_all_versions_data(session, token=token)
+
+    if not data:
+        return JSONResponse(
+            content={'detail': 'Dados não retornados.'},
+            status_code=codes.INTERNAL_SERVER_ERROR,
+        )
+    return data
