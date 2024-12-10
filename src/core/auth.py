@@ -29,7 +29,7 @@ async def validate_token(token: str) -> bool:
     return True
 
 
-semaphore = asyncio.Semaphore(20)  # Semáforo para requisições concorrentes
+semaphore = asyncio.Semaphore(30)  # Semáforo para requisições concorrentes
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
