@@ -14,11 +14,10 @@ class ConexaoDB2:
 
 
     def conexao(self):
-                
         userDB2 = Usuario(self.tipo)
 
         db2_url = f'ibm_db_sa://{userDB2.username}:{userDB2.password}@{userDB2.hostname}:{userDB2.port}/SUPEROP'
 
         engine_db2 = create_engine(db2_url)
-            
+
         return engine_db2
