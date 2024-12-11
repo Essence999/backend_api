@@ -5,6 +5,7 @@ from sqlalchemy.sql import text
 def get_dict_from_query(
     session: Session, query: str, params: dict | None = None
 ) -> list[dict] | None:
+    """Executa uma query e retorna os resultados em forma de dicionário."""
     try:
         query_result = session.execute(query, params).mappings().all()
         data = [dict(row) for row in query_result]
