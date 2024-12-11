@@ -16,7 +16,7 @@ async def validate_token(token: str) -> bool:
     """Valida o token de autenticação."""
     if not token:
         return False
-    async with httpx.AsyncClient(verify=False, timeout=30) as client:
+    async with httpx.AsyncClient(verify=False, timeout=10) as client:
         try:
             response = await client.get(API_LOGIN_URL, cookies={'BBSSOToken': token})
             if response.status_code == httpx.codes.UNAUTHORIZED:
@@ -24,7 +24,7 @@ async def validate_token(token: str) -> bool:
             response_json = response.json()
             if ACESS_CODE not in response_json.get('acessos'):
                 return False
-        except httpx.TimeoutException:
+        except Exception:
             return False
     return True
 
