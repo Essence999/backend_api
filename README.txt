@@ -1,0 +1,1 @@
+pip install uvicorn fastapi httpx pydantic_settings sqlalchemy ibm_db ibm_db_sa pandas
