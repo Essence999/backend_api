@@ -79,6 +79,18 @@ def get_ocr_cards(session: Session, type: str) -> list[dict] | None:
         return data
     return
 
+def get_dev_query(session: Session) -> list[dict] | None:
+    query = text(
+        f"""
+            SELECT  DISTINCT *
+                        FROM DB2ATB.INFO_CARDS
+                        ORDER BY NM_CARD ASC
+        """
+    )
+    data = get_dict_from_query(session, query)
+    if data is not None:
+        return data
+    return
 
 def update_meta_card(session: Session, new_value: str, ind: str, prf: str) -> dict:
     query = text(

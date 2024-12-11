@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse
 from httpx import codes
 from sqlalchemy.orm import Session
-# from src.core.database import get_db_dev
+from src.core.database import get_db_dev
 
 from src.core.database import get_db
-from src.services.ocr import get_ocr_cards_data, update_ocr_card
+from src.services.ocr import get_ocr_cards_data, update_ocr_card, get_dev
 from src.services.versions import get_all_versions_data
 
 router = APIRouter(prefix='/api')
@@ -28,11 +28,16 @@ async def get_versions_data(
     return data
 
 
-# @router.get('/dev', status_code=codes.OK)
-# async def get_versions_data_dev(
-#     session: Session = Depends(get_db_dev),
-# ):
-#     pass
+@router.get('/dev', status_code=codes.OK)
+async def get_versions_data_dev(
+    session: Session = Depends(get_db_dev)
+):
+    data = get_dev(session)
+    if data is None:
+        return JSONResponse(
+            content={'detail': 'Requisição inválida.'}, status_code=codes.BAD_REQUEST
+        )
+    return data
 
 @router.get('/ocr/{type}')
 async def get_ocr_data(type: str, session: Session = Depends(get_db)):
