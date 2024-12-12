@@ -97,7 +97,7 @@ def get_ocr_cards(session: Session, type: str) -> list[dict] | None:
     return None
 
 
-def update_meta_card(session: Session, new_value: str, ind: str, prf: str) -> dict:
+def update_meta_card(session: Session, new_value: float, ind: str, prf: str) -> dict:
     query = text(
         """
         UPDATE DB2ATB.INFO_CARDS SET VL_META_CARD = :meta, TS_ATU = CURRENT_DATE
