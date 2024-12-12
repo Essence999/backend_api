@@ -87,10 +87,8 @@ def get_regua_cards(session: Session) -> list[dict] | None:
 def get_ocr_cards(session: Session, type: str) -> list[dict] | None:
     if type == 'meta':
         data = get_ocr_meta(session)
-    elif type == 'regua':
-        data = get_regua_cards(session)
     else:
-        return None
+        data = get_regua_cards(session)
 
     if data is not None:
         return data

@@ -14,6 +14,6 @@ def get_ocr_cards_data(session: Session, type: str):
         df['NM_IN_MBZ'] = df['NM_IN_MBZ'].str.strip()
         df['TS_ATU'] = df['TS_ATU'].astype(str)
         data = df.replace({np.nan: None}).to_dict(orient='records')
-        data = {type: data}
+    data = {type: data}
 
     return data
