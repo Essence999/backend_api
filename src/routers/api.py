@@ -38,8 +38,10 @@ async def get_ocr_data(type: str, session: Session = Depends(get_db)):
 
 
 @router.put('/ocr/{type}')
-async def update_ocr_by_type(type: str, new_value: float, prf: int, ind: int):
-    result: dict = update_ocr_card()
+async def update_ocr_by_type(
+        type: str, new_value: float, ind: int, prf: int,
+        session: Session = Depends(get_db)):
+    result: dict = update_ocr_card(session, type, new_value, ind, prf)
     if not result['sucess']:
         return JSONResponse(
             content={'detail': result['message']}, status_code=codes.BAD_REQUEST

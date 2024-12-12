@@ -58,27 +58,43 @@ def get_info_cards(session: Session) -> list[dict]:
     return get_dict_from_query(session, query)
 
 
-def get_ocr_cards(session: Session, type: str) -> list[dict] | None:
-    if type == 'meta':
-        ocr = 'OCR_META'
-    elif type == 'regua':
-        ocr = 'OCR_RGUA'
-    else:
-        return None
-
+def get_ocr_meta(session: Session) -> list[dict] | None:
     query = text(
-        f"""
+        """
         SELECT VL_META_IN_MBZ, VL_META_CARD, CD_PRF_CARD, CD_IND_ATB,
         NM_IN_MBZ, AA_APRC, MM_APRC, TS_ATU
         FROM DB2ATB.VS_DVGA_ATB_CARD
-        WHERE {ocr} = 1
+        WHERE OCR_META = 1
         ORDER BY NM_IN_MBZ ASC
         """
     )
-    data = get_dict_from_query(session, query)
+    return get_dict_from_query(session, query)
+
+
+def get_regua_cards(session: Session) -> list[dict] | None:
+    query = text(
+        """
+        SELECT RGUA_ATB, RGUA_CARD, CD_PRF_CARD, CD_IND_ATB,
+        NM_IN_MBZ, AA_APRC, MM_APRC, TS_ATU
+        FROM DB2ATB.VS_DVGA_ATB_CARD
+        WHERE OCR_RGUA = 1
+        ORDER BY NM_IN_MBZ ASC
+        """
+    )
+    return get_dict_from_query(session, query)
+
+
+def get_ocr_cards(session: Session, type: str) -> list[dict] | None:
+    if type == 'meta':
+        data = get_ocr_meta(session)
+    elif type == 'regua':
+        data = get_regua_cards(session)
+    else:
+        return None
+
     if data is not None:
         return data
-    return
+    return None
 
 
 def update_meta_card(session: Session, new_value: str, ind: str, prf: str) -> dict:
@@ -106,24 +122,40 @@ def update_meta_card(session: Session, new_value: str, ind: str, prf: str) -> di
 
 
 def update_regua_card(session: Session, new_value: str, ind: str, prf: str) -> dict:
-    query = text(
+    vl_query = text(
         """
-        UPDATE DB2ATB.INFO_CARDS SET VL_META_CARD = :regua, TS_ATU = CURRENT_DATE
+        UPDATE DB2ATB.INFO_CARDS SET VL_RGUA_MAX_CARD = :vl, TS_ATU = CURRENT_DATE
         WHERE CD_IND_ATB = :ind AND
         CD_PRF_CARD = :prf AND
         REF_AA = YEAR(CURRENT_DATE) AND
         REF_MM = MONTH(CURRENT_DATE)
         """
     )
-    params = {'regua': new_value, 'ind': ind, 'prf': prf}
-    try:
-        result = session.execute(query, params)
-        session.commit()
+    qt_query = text(
+        """
+        UPDATE DB2ATB.INFO_CARDS SET QT_PTO_FXA_RGUA_CARD = :qt, TS_ATU = CURRENT_DATE
+        WHERE CD_IND_ATB = :ind AND
+        CD_PRF_CARD = :prf AND
+        REF_AA = YEAR(CURRENT_DATE) AND
+        REF_MM = MONTH(CURRENT_DATE)
+        """
+    )
+    rgua = new_value.replace(' ', '')
+    rgua = rgua.split('x')
 
-        if result.rowcount > 0:
-            return {'sucess': True, 'message': 'Atualizado com sucesso.'}
-        else:
-            return {'sucess': False, 'message': 'Nenhuma linha foi alterada.'}
+    vl = rgua[0]
+    qt = rgua[1]
+
+    vl_params = {'vl': vl, 'ind': ind, 'prf': prf}
+    qt_params = {'qt': qt, 'ind': ind, 'prf': prf}
+
+    try:
+        session.execute(vl_query, vl_params)
+        session.execute(qt_query, qt_params)
+
+        session.commit()
+        return True
     except Exception as e:
+        print(str(e))
         session.rollback()
-        return {'sucess': False, 'message': str(e)}
+        return False
