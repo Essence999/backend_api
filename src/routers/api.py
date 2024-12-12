@@ -4,7 +4,8 @@ from httpx import codes
 from sqlalchemy.orm import Session
 
 from src.core.database import get_db
-from src.services.ocr import get_ocr_cards_data, update_ocr_card
+from src.services.dao import update_meta_card, update_regua_card
+from src.services.ocr import get_ocr_cards_data
 from src.services.versions import get_all_versions_data
 
 router = APIRouter(prefix='/api')
@@ -37,15 +38,29 @@ async def get_ocr_data(type: str, session: Session = Depends(get_db)):
     return data
 
 
-@router.put('/ocr/{type}')
-async def update_ocr_by_type(
-        type: str, new_value: float, ind: int, prf: int,
-        session: Session = Depends(get_db)):
-    result: dict = update_ocr_card(session, type, new_value, ind, prf)
-    if not result['sucess']:
+@router.put('/ocr/meta')
+async def update_meta(
+    new_value: float, ind: int, prf: int, session: Session = Depends(get_db)
+):
+    result: bool = update_meta_card(session, new_value, ind, prf)
+    if not result:
         return JSONResponse(
-            content={'detail': result['message']}, status_code=codes.BAD_REQUEST
+            content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST
         )
     return JSONResponse(
-        content={'detail': result['message']}, status_code=codes.ACCEPTED
+        content={'detail': 'Atualização realizada.'}, status_code=codes.ACCEPTED
+    )
+
+
+@router.put('/ocr/regua')
+async def update_regua(
+    new_value: str, ind: int, prf: int, session: Session = Depends(get_db)
+):
+    result: bool = update_regua_card(session, new_value, ind, prf)
+    if not result:
+        return JSONResponse(
+            content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST
+        )
+    return JSONResponse(
+        content={'detail': 'Atualização realizada.'}, status_code=codes.ACCEPTED
     )

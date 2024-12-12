@@ -1,7 +1,7 @@
 import pandas as pd
 from sqlalchemy.orm import Session
 
-from src.services.dao import get_ocr_cards, update_meta_card, update_regua_card
+from src.services.dao import get_ocr_cards
 
 
 def get_ocr_cards_data(session: Session, type: str):
@@ -14,14 +14,3 @@ def get_ocr_cards_data(session: Session, type: str):
         data = df.to_dict(orient='records')
         data = {type: data}
     return data
-
-
-def update_ocr_card(
-    session: Session, type: str, new_value: str, ind: str, prf: str
-) -> dict:
-    if type == 'meta':
-        return update_meta_card(session, new_value, ind, prf)
-    elif type == 'regua':
-        return update_regua_card(session, new_value, ind, prf)
-    else:
-        return {'sucess': False, 'message': 'Tipo inválido.'}

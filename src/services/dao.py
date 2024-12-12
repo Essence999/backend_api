@@ -109,16 +109,14 @@ def update_meta_card(session: Session, new_value: str, ind: str, prf: str) -> di
     )
     params = {'meta': new_value, 'ind': ind, 'prf': prf}
     try:
-        result = session.execute(query, params)
+        session.execute(query, params)
         session.commit()
 
-        if result.rowcount > 0:
-            return {'sucess': True, 'message': 'Atualizado com sucesso.'}
-        else:
-            return {'sucess': False, 'message': 'Nenhuma linha foi alterada.'}
+        return True
     except Exception as e:
+        print(str(e))
         session.rollback()
-        return {'sucess': False, 'message': str(e)}
+        return False
 
 
 def update_regua_card(session: Session, new_value: str, ind: str, prf: str) -> dict:
