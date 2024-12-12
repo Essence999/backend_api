@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
 
-BUILD_DIR = '/home/wsl/Downloads/frontend/build'
+BUILD_DIR = '/home/wsl/Downloads/front-end-incon/build'
 
 router = APIRouter(prefix='')
 
