@@ -2,7 +2,7 @@ import asyncio
 
 import httpx
 from fastapi import Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from src.core.config import Settings
@@ -12,7 +12,7 @@ API_LOGIN_URL = 'https://services.dipes.intranet.bb.com.br/login/info'
 WEB_LOGIN_URL = 'https://login.intranet.bb.com.br/sso/XUI/#login&goto='
 
 
-async def validate_token(token: str) -> bool:
+async def validate_token(token: str) -> bool | None:
     """Valida o token de autenticação."""
     if not token:
         return False
@@ -23,7 +23,7 @@ async def validate_token(token: str) -> bool:
                 return False
             response_json = response.json()
             if ACESS_CODE not in response_json.get('acessos'):
-                return False
+                return None
         except Exception:
             return False
     return True
@@ -38,10 +38,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
             token = request.cookies.get('BBSSOToken')
 
             is_valid = await validate_token(token)
-            if not is_valid:
+            if is_valid is False:
                 target_url = request.url
                 url = f'{WEB_LOGIN_URL}{target_url}'
                 return RedirectResponse(url)
+            elif is_valid is None:
+                return Response(status_code=403)
 
             request.state.token = token
             response = await call_next(request)

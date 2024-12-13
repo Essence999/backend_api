@@ -17,6 +17,7 @@ async def _get_one_card_data(card_number: int, client: httpx.AsyncClient):
 
     response = await client.get(url)
     if response.status_code != httpx.codes.OK:
+        print('CARD não adquirido: ', card_number)
         return None
 
     data = response.json()
@@ -41,7 +42,7 @@ async def _compare_versions(session: Session, client: httpx.AsyncClient):
     site_df = pd.DataFrame([item for item in site_data if item is not None])
 
     if site_df.empty:
-        return None
+        return site_df
 
     # Compara versões usando merge e query
     result_df = pd.merge(db_df, site_df, on='CD_CARD')
@@ -55,6 +56,9 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient):
     ic_df.columns = ic_df.columns.str.upper()
 
     compared_df: pd.DataFrame = await _compare_versions(session, client)
+
+    if compared_df.empty:
+        return []
 
     ic_df = (
         pd.merge(ic_df, compared_df, on=['CD_CARD', 'CD_VERS'], how='left')
@@ -79,5 +83,6 @@ async def get_all_versions_data(session: Session, token: str):
             data = await _get_all_info_cards_data(session, client)
         data = {'versoes': data, 'exec': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
         return data
-    except Exception:
+    except Exception as e:
+        print(str(e))
         return None
