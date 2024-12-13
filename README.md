@@ -1,4 +1,4 @@
-Váriaveis de ambiente:
+Váriaveis de ambiente no .env:
 
 DB2_HOST = "bdhdb2-p2olap.servicos.bb.com.br"
 
