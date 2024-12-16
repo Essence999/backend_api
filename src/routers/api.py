@@ -32,18 +32,29 @@ async def get_versions_data(
 @router.get('/ocr/meta')
 async def get_meta_card_data(session: Session = Depends(get_db)):
     data = get_ocr_cards_data(session, 'meta')
+    if not data:
+        return JSONResponse(
+            content={'detail': 'Dados não retornados.'},
+            status_code=codes.INTERNAL_SERVER_ERROR,
+        )
     return data
 
 
 @router.get('/ocr/regua')
 async def get_regua_card_data(session: Session = Depends(get_db)):
     data = get_ocr_cards_data(session, 'regua')
+    if not data:
+        return JSONResponse(
+            content={'detail': 'Dados não retornados.'},
+            status_code=codes.INTERNAL_SERVER_ERROR,
+        )
     return data
 
 
 @router.put('/ocr/meta')
 async def update_meta(meta: Meta, session: Session = Depends(get_db)):
-    result: bool = update_meta_card(session, meta.new_value, meta.ind, meta.prf)
+    result: bool = update_meta_card(
+        session, meta.new_value, meta.ind, meta.prf)
     if not result:
         return JSONResponse(
             content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST
@@ -55,7 +66,8 @@ async def update_meta(meta: Meta, session: Session = Depends(get_db)):
 
 @router.put('/ocr/regua')
 async def update_regua(regua: Regua, session: Session = Depends(get_db)):
-    result: bool = update_regua_card(session, regua.new_value, regua.ind, regua.prf)
+    result: bool = update_regua_card(
+        session, regua.new_value, regua.ind, regua.prf)
     if not result:
         return JSONResponse(
             content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST
