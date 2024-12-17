@@ -9,4 +9,3 @@ class Settings(BaseSettings):
     DB2_PASS: str
 
     API_ACESS_CODE: str
-    HTTPS_PROXY: str
