@@ -7,10 +7,9 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
 
 COPY src/ ./src/
-# Adiconar o COPY certs para rodar em HTTPS
+# Adicionar o COPY certs para rodar em HTTPS
 # COPY certs/ ./certs/
 COPY static/ ./static/
-COPY .env ./.env
 
 EXPOSE 8000
 

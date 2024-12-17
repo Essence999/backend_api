@@ -1,11 +1,7 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file='.env',
-        env_file_encoding='utf-8',
-    )
     DB2_HOST: str
     DB2_DB: str
     DB2_PORT: int
@@ -13,3 +9,4 @@ class Settings(BaseSettings):
     DB2_PASS: str
 
     API_ACESS_CODE: str
+    HTTPS_PROXY: str
