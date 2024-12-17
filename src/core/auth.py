@@ -22,7 +22,7 @@ async def validate_token(token: str) -> bool | None:
             if response.status_code == httpx.codes.UNAUTHORIZED:
                 return False
             response_json = response.json()
-            if ACESS_CODE not in response_json.get('acessos'):
+            if ACESS_CODE and ACESS_CODE not in response_json.get('acessos'):
                 return None
         except Exception:
             return False

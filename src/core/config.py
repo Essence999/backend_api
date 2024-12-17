@@ -8,4 +8,5 @@ class Settings(BaseSettings):
     DB2_USER: str
     DB2_PASS: str
 
-    API_ACESS_CODE: str
+    # Por padrão, é vazio, ou seja: Não será verificado o acesso.
+    API_ACESS_CODE: str = None
