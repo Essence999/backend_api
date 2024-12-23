@@ -1,12 +1,5 @@
 FROM python:3.11.9
 
-ENV DB2_HOST="bdhdb2-p2olap.servicos.bb.com.br"
-ENV DB2_DB="SUPEROP"
-ENV DB2_PORT="50000"
-ENV DB2_USER=""
-ENV DB2_PASS=""
-ENV API_ACESS_CODE="AAA4"
-
 WORKDIR /app
 
 COPY pip.conf /etc/pip.conf
