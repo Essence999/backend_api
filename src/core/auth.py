@@ -41,6 +41,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
             if is_valid is False:
                 target_url = request.url
                 url = f'{WEB_LOGIN_URL}{target_url}'
+                if url.startswith('http'):
+                    url = url.replace('http', 'https')
                 return RedirectResponse(url)
             elif is_valid is None:
                 return Response(status_code=403)
