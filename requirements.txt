@@ -1,4 +1,4 @@
-fastapi[standard]>=0.115.4
+fastapi[standard]>=0.115.6
 httpx>=0.28.1
 ibm-db>=3.2.4
 ibm-db-sa>=0.4.1
