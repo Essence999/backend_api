@@ -1,5 +1,12 @@
 FROM python:3.11.9
 
+ENV DB2_HOST="bdhdb2-p2olap.servicos.bb.com.br"
+ENV DB2_DB="SUPEROP"
+ENV DB2_PORT="50000"
+ENV DB2_USER=""
+ENV DB2_PASS=""
+ENV API_ACESS_CODE="AAA4"
+
 WORKDIR /app
 
 COPY pip.conf /etc/pip.conf
@@ -14,8 +21,8 @@ COPY static/ ./static/
 EXPOSE 8000
 
 # Roda o projeto em HTTPS
-# CMD ["uvicorn", "src.main:app","--host", "0.0.0.0",  "--port", "8000", "--ssl-keyfile=certs/server.key", "--ssl-certfile=certs/server.crt"]
+# CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0",  "--port", "8000", "--ssl-keyfile=certs/server.key", "--ssl-certfile=certs/server.crt"]
 
 # Roda o projeto em HTTP
-# CMD ["uvicorn", "src.main:app","--host", "0.0.0.0",  "--port", "8000"]
-CMD ["fastapi", "run", "src/main.py", "--port", "8000", "--proxy-headers"]
+# CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0",  "--port", "8000"]
+CMD ["fastapi", "run", "src/main.py", "--proxy-headers", "--port", "8000"]
