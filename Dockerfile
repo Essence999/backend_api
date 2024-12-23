@@ -17,5 +17,5 @@ EXPOSE 8000
 # CMD ["uvicorn", "src.main:app","--host", "0.0.0.0",  "--port", "8000", "--ssl-keyfile=certs/server.key", "--ssl-certfile=certs/server.crt"]
 
 # Roda o projeto em HTTP
-CMD ["uvicorn", "src.main:app","--host", "0.0.0.0",  "--port", "8000"]
-# CMD ["fastapi", "run", "src/main.py", "--proxy-headers", "--port", "8000"]
+# CMD ["uvicorn", "src.main:app","--host", "0.0.0.0",  "--port", "8000"]
+CMD ["fastapi", "run", "src/main.py", "--port", "8000", "--proxy-headers"]
