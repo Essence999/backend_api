@@ -11,7 +11,7 @@ uri = f'{sett.DB2_USER}:{sett.DB2_PASS}@{sett.DB2_HOST}:{sett.DB2_PORT}/{sett.DB
 engine = create_engine(f'ibm_db_sa://{uri}',
                        pool_size=1,
                        max_overflow=2,
-                       pool_timeout=60,
+                       pool_timeout=30,
                        pool_recycle=3600)
 
 
