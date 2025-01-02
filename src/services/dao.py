@@ -10,8 +10,7 @@ def execute_query(session: Session, query: str, params: dict | None = None) -> l
         logging.debug(f'Executando query: {query} com parâmetros: {params}')
         result = session.execute(query, params).mappings().all()
         data = [dict(row) for row in result]
-        logging.info(
-            f'Query executada com sucesso. Retornando {len(data)} registros.')
+        logging.info(f'Query executada com sucesso. Retornando {len(data)} registros.')
         return data
     except Exception as e:
         logging.error(f'Erro ao executar a query: {e}', exc_info=True)
@@ -73,15 +72,13 @@ def get_ocr_cards(session: Session, card_type: str) -> list[dict]:
 def update_card(session: Session, query: str, params: dict) -> bool:
     """Executa uma query de atualização."""
     try:
-        logging.debug(
-            f'Executando query de atualização: {query} com parâmetros: {params}')
+        logging.debug(f'Executando query de atualização: {query} com parâmetros: {params}')
         session.execute(query, params)
         session.commit()
         logging.info('Query de atualização executada com sucesso.')
         return True
     except Exception as e:
-        logging.error(
-            f'Erro ao executar a query de atualização: {e}', exc_info=True)
+        logging.error(f'Erro ao executar a query de atualização: {e}', exc_info=True)
         session.rollback()
         return False  # Retorna False em caso de erro
 
@@ -132,8 +129,7 @@ def update_regua_card(session: Session, vl: float, qt: float, ind: str, prf: str
             logging.info('Régua atualizada com sucesso.')
             return True
         else:
-            logging.warning(
-                'Erro ao atualizar a régua. Uma ou mais operações falharam.')
+            logging.warning('Erro ao atualizar a régua. Uma ou mais operações falharam.')
             return False
     except Exception as e:
         logging.error(f'Erro ao atualizar a régua: {e}', exc_info=True)

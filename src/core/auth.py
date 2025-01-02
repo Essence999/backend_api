@@ -24,7 +24,7 @@ async def validate_token(token: str) -> bool | None:
             response_json = response.json()
             if ACESS_CODE and ACESS_CODE not in response_json.get('acessos'):
                 return None
-        except Exception:
+        except httpx.RequestError:
             return False
     return True
 
@@ -39,10 +39,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
             is_valid = await validate_token(token)
             if is_valid is False:
-                target_url = request.url
+                target_url = str(request.url).replace('http://', 'https://')
                 url = f'{WEB_LOGIN_URL}{target_url}'
-                url = url.replace('https', 'http')
-                url = url.replace('http', 'https')
                 return RedirectResponse(url)
             elif is_valid is None:
                 return Response(status_code=403)
