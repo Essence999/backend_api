@@ -23,7 +23,8 @@ async def _get_card_data(card_number: int, client: httpx.AsyncClient) -> dict | 
         logging.debug(f'Dados do card {card_number} obtidos com sucesso')
         return {'CD_CARD': data['id'], 'SITE_VERS': data['versao']}
     except httpx.HTTPStatusError as e:
-        logging.error(f'Erro ao buscar card {card_number}: {e.response.status_code} - {e.response.text}')
+        logging.error(
+            f'Erro ao buscar card {card_number}: {e.response.status_code} - {e.response.text}')
     except httpx.RequestError as e:
         logging.error(f'Erro de conexão ao buscar card {card_number}: {e!s}')
     return None
@@ -70,13 +71,16 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
             logging.warning('Nenhuma comparação de versões disponível.')
             return []
 
-        ic_df = pd.merge(ic_df, compared_df, on=['CD_CARD', 'CD_VERS'], how='left')
-        ic_df = ic_df.query('CD_VERS != SITE_VERS').rename(columns={'CD_VERS': 'DB_VERS'})
+        ic_df = pd.merge(ic_df, compared_df, on=[
+                         'CD_CARD', 'CD_VERS'], how='left')
+        ic_df = ic_df.query('CD_VERS != SITE_VERS').rename(
+            columns={'CD_VERS': 'DB_VERS'})
         ic_df['LINK_CARD'] = URL_SITE + ic_df['CD_CARD'].astype(str)
         ic_df.fillna({'SITE_VERS': -1}, inplace=True)
         ic_df = ic_df.sort_values(by='CD_CARD')
 
         logging.debug('Processamento de InfoCards concluído com sucesso.')
+        ic_df.convert_dtypes()
         return ic_df.to_dict(orient='records')
     except Exception as e:
         logging.error(f'Erro ao processar InfoCards: {e!s}')
