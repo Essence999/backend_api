@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from httpx import codes
 from sqlalchemy.orm import Session
 
@@ -67,7 +67,7 @@ async def update_meta(meta: Meta, session: Session = Depends(get_db)):
 @router.put('/regua')
 async def update_regua(regua: Regua, session: Session = Depends(get_db)):
     result: bool = update_regua_card(
-        session, regua.new_value, regua.ind, regua.prf)
+        session, regua.vl, regua.qt, regua.ind, regua.prf)
     if not result:
         return JSONResponse(
             content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST
@@ -75,3 +75,8 @@ async def update_regua(regua: Regua, session: Session = Depends(get_db)):
     return JSONResponse(
         content={'detail': 'Atualização realizada.'}, status_code=codes.ACCEPTED
     )
+
+
+@router.delete("/logout")
+async def remove_cookie(response: Response):
+    response.delete_cookie(key="BBSSOToken", path="/", domain=".bb.com.br")

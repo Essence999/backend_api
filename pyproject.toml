@@ -27,8 +27,7 @@ dev = [
 [tool.taskipy.tasks]
 s = "sudo python3 domain.py"
 d = "fastapi dev src/main.py --reload"
-r = "task s && uvicorn src.main:app --reload --host 0.0.0.0 --ssl-keyfile=certs/server.key --ssl-certfile=certs/server.crt"
-p = "uvicorn src.main:app --host 0.0.0.0"
+r = "uvicorn src.main:app --reload --host 0.0.0.0 --ssl-keyfile=certs/server.key --ssl-certfile=certs/server.crt"
 
 lint = "ruff check . && ruff check . --diff"
 f = "ruff check . --fix && ruff format ."

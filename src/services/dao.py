@@ -117,7 +117,8 @@ def update_meta_card(session: Session, new_value: float, ind: str, prf: str) -> 
         return False
 
 
-def update_regua_card(session: Session, new_value: str, ind: str, prf: str) -> bool:
+def update_regua_card(session: Session,
+                      vl: float, qt: float, ind: str, prf: str) -> bool:
     vl_query = text(
         """
         UPDATE DB2ATB.INFO_CARDS SET VL_RGUA_MAX_CARD = :vl, TS_ATU = CURRENT_DATE
@@ -136,11 +137,6 @@ def update_regua_card(session: Session, new_value: str, ind: str, prf: str) -> b
         REF_MM = MONTH(CURRENT_DATE)
         """
     )
-    rgua = new_value.replace(' ', '')
-    rgua = rgua.split('x')
-
-    vl = rgua[0]
-    qt = rgua[1]
 
     vl_params = {'vl': vl, 'ind': ind, 'prf': prf}
     qt_params = {'qt': qt, 'ind': ind, 'prf': prf}

@@ -81,7 +81,8 @@ async def get_all_versions_data(session: Session, token: str):
         ) as client:
             client.cookies.set('BBSSOToken', token)
             data = await _get_all_info_cards_data(session, client)
-        data = {'versoes': data, 'exec': datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        data = {'versoes': data, 'exec': datetime.now().strftime(
+            '%Y-%m-%d %H:%M:%S')}
         return data
     except Exception as e:
         print(str(e))

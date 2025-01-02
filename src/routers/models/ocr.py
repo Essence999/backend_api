@@ -8,6 +8,7 @@ class Meta(BaseModel):
 
 
 class Regua(BaseModel):
-    new_value: str
+    vl: float
+    qt: float
     ind: int
     prf: int
