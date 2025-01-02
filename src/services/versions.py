@@ -5,7 +5,7 @@ import httpx
 import pandas as pd
 from sqlalchemy.orm import Session
 
-from src.services.dao import get_current_cards, get_info_cards
+from src.services.dao import get_info_cards
 
 URL_API = 'https://portaldarede.intranet.bb.com.br/varejo/api/publico/conteudos'
 URL_SITE = 'https://portaldarede.intranet.bb.com.br/varejo/artigos/'
@@ -34,12 +34,9 @@ async def _get_all_cards_data(card_numbers: list[int], client: httpx.AsyncClient
     return [item for item in site_data if item is not None]
 
 
-async def _compare_versions(session: Session, client: httpx.AsyncClient) -> pd.DataFrame:
+async def _compare_versions(db_df: pd.DataFrame, client: httpx.AsyncClient) -> pd.DataFrame:
     """Compara versões do banco com o site."""
     try:
-        db_df = pd.DataFrame(get_current_cards(session))
-        db_df.columns = db_df.columns.str.upper()
-
         site_data = await _get_all_cards_data(db_df['CD_CARD'].tolist(), client)
         if not site_data:
             print('Nenhum dado válido encontrado no site.')
@@ -59,7 +56,9 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
         ic_df = pd.DataFrame(info_cards)
         ic_df.columns = ic_df.columns.str.upper()
 
-        compared_df = await _compare_versions(session, client)
+        db_df = ic_df[['CD_CARD', 'CD_VERS']]
+
+        compared_df = await _compare_versions(db_df, client)
         if compared_df.empty:
             print('Nenhuma comparação de versões disponível.')
             return []

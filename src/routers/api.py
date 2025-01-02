@@ -53,7 +53,8 @@ async def get_regua_card_data(session: Session = Depends(get_db)):
 
 @router.put('/meta')
 async def update_meta(meta: Meta, session: Session = Depends(get_db)):
-    result: bool = update_meta_card(session, meta.new_value, meta.ind, meta.prf)
+    result: bool = update_meta_card(
+        session, meta.new_value, meta.ind, meta.prf)
     if not result:
         return JSONResponse(content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST)
     return JSONResponse(content={'detail': 'Atualização realizada.'}, status_code=codes.ACCEPTED)
@@ -61,7 +62,8 @@ async def update_meta(meta: Meta, session: Session = Depends(get_db)):
 
 @router.put('/regua')
 async def update_regua(regua: Regua, session: Session = Depends(get_db)):
-    result: bool = update_regua_card(session, regua.vl, regua.qt, regua.ind, regua.prf)
+    result: bool = update_regua_card(
+        session, regua.vl, regua.qt, regua.ind, regua.prf)
     if not result:
         return JSONResponse(content={'detail': 'Erro de atualização.'}, status_code=codes.BAD_REQUEST)
     return JSONResponse(content={'detail': 'Atualização realizada.'}, status_code=codes.ACCEPTED)
