@@ -2,9 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
 
-def get_dict_from_query(
-    session: Session, query: str, params: dict | None = None
-) -> list[dict] | None:
+def get_dict_from_query(session: Session, query: str, params: dict | None = None) -> list[dict] | None:
     """Executa uma query e retorna os resultados em forma de dicionário."""
     try:
         query_result = session.execute(query, params).mappings().all()
@@ -117,8 +115,7 @@ def update_meta_card(session: Session, new_value: float, ind: str, prf: str) -> 
         return False
 
 
-def update_regua_card(session: Session,
-                      vl: float, qt: float, ind: str, prf: str) -> bool:
+def update_regua_card(session: Session, vl: float, qt: float, ind: str, prf: str) -> bool:
     vl_query = text(
         """
         UPDATE DB2ATB.INFO_CARDS SET VL_RGUA_MAX_CARD = :vl, TS_ATU = CURRENT_DATE

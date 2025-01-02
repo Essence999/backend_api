@@ -33,7 +33,7 @@ lint = "ruff check . && ruff check . --diff"
 f = "ruff check . --fix && ruff format ."
 
 [tool.ruff]
-line-length = 88
+line-length = 110
 indent-width = 4
 
 [tool.ruff.lint]
