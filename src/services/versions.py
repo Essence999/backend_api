@@ -49,7 +49,7 @@ async def _compare_versions(db_df: pd.DataFrame, client: httpx.AsyncClient) -> p
             return pd.DataFrame()
 
         site_df = pd.DataFrame(site_data)
-        logging.debug('Comparação de versões concluída com sucesso.')
+        logging.debug('Comparação de versões concluída.')
         return pd.merge(db_df, site_df, on='CD_CARD')
     except Exception as e:
         logging.error(f'Erro ao comparar versões: {e!s}')
@@ -79,7 +79,8 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
         ic_df.fillna({'SITE_VERS': -1}, inplace=True)
         ic_df = ic_df.sort_values(by='CD_CARD')
 
-        logging.debug('Processamento de InfoCards concluído com sucesso.')
+        logging.info(
+            f'Comparação de versões concluída com {len(ic_df)} cards.')
         ic_df.convert_dtypes()
         return ic_df.to_dict(orient='records')
     except Exception as e:

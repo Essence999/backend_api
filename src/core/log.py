@@ -10,7 +10,7 @@ def setup_logging():
         'disable_existing_loggers': False,  # Mantém loggers existentes
         'formatters': {
             'default': {
-                'format': '[%(levelname)s] - %(asctime)s - %(message)s',
+                'format': '[%(levelname)s] %(asctime)s - %(message)s',
                 'datefmt': '%H:%M:%S',
             },
         },
