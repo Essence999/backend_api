@@ -25,7 +25,7 @@ def get_info_cards(session: Session) -> list[dict]:
         """
         SELECT DISTINCT CD_CARD, NM_CARD, VL_RGUA_MAX_CARD, QT_PTO_FXA_RGUA_CARD,
         VL_META_CARD, CD_IND_ATB, NM_IND_ATB, TIP_ACRD, CD_VERS
-        FROM DB2ATB.INFO_CARDS
+        FROM DB2ATB.INFO_CARDS__
         WHERE CD_CARD < 10000
         AND REF_AA = YEAR(CURRENT DATE)
         AND REF_MM = MONTH(CURRENT DATE)
