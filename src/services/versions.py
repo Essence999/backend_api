@@ -35,7 +35,6 @@ async def _get_all_cards_data(card_numbers: list[int], client: httpx.AsyncClient
     logging.info(f'Iniciando busca de dados para {len(card_numbers)} cards.')
     tasks = [_get_card_data(card, client) for card in card_numbers]
     site_data = await asyncio.gather(*tasks)
-    logging.info(f'Busca de dados concluída com {len(site_data)} resultados.')
     return [item for item in site_data if item is not None]
 
 
@@ -44,6 +43,8 @@ async def _compare_versions(db_df: pd.DataFrame, client: httpx.AsyncClient) -> p
     logging.debug('Iniciando comparação de versões.')
     try:
         site_data = await _get_all_cards_data(db_df['CD_CARD'].tolist(), client)
+        logging.info(
+            f'Busca concluída com {len(site_data)} resultados.')
         if not site_data:
             logging.warning('Nenhum dado válido encontrado no site.')
             return pd.DataFrame()
@@ -80,7 +81,7 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
         ic_df = ic_df.sort_values(by='CD_CARD')
 
         logging.info(
-            f'Comparação de versões concluída com {len(ic_df)} cards.')
+            f'Comparação de versões finalizada com {len(ic_df)} cards.')
         ic_df.convert_dtypes()
         return ic_df.to_dict(orient='records')
     except Exception as e:
