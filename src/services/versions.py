@@ -74,6 +74,14 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
 
         comp_df = comp_df.query('CD_VERS != SITE_VERS').rename(
             columns={'CD_VERS': 'DB_VERS'})
+        comp_df = comp_df.rename(
+            columns={
+                'CD_VERS': 'DB_VERS',
+                'VL_RGUA_MAX_CARD_CLTO': 'VL_RGUA',
+                'QT_PTO_FXA_RGUA_CARD_CLTO': 'QT_RGUA',
+                'VL_META_CARD': 'META'}
+        )
+
         comp_df['LINK_CARD'] = URL_SITE + comp_df['CD_CARD'].astype(str)
         comp_df.fillna({'SITE_VERS': -1}, inplace=True)
 
