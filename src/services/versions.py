@@ -64,28 +64,26 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
     logging.debug('Iniciando processamento de InfoCards.')
     try:
         info_cards = get_info_cards(session)
-        ic_df = pd.DataFrame(info_cards)
-        ic_df.columns = ic_df.columns.str.upper()
+        db_df = pd.DataFrame(info_cards)
+        db_df.columns = db_df.columns.str.upper()
 
-        db_df = ic_df[['CD_CARD', 'CD_VERS']]
-
-        compared_df = await _compare_versions(db_df, client)
-        if compared_df.empty:
+        comp_df = await _compare_versions(db_df, client)
+        if comp_df.empty:
             logging.warning('Nenhuma comparação de versões disponível.')
             return []
 
-        ic_df = pd.merge(ic_df, compared_df, on=[
-                         'CD_CARD', 'CD_VERS'], how='left')
-        ic_df = ic_df.query('CD_VERS != SITE_VERS').rename(
+        comp_df = comp_df.query('CD_VERS != SITE_VERS').rename(
             columns={'CD_VERS': 'DB_VERS'})
-        ic_df['LINK_CARD'] = URL_SITE + ic_df['CD_CARD'].astype(str)
-        ic_df.fillna({'SITE_VERS': -1}, inplace=True)
-        ic_df = ic_df.sort_values(by='CD_CARD')
+        comp_df['LINK_CARD'] = URL_SITE + comp_df['CD_CARD'].astype(str)
+        comp_df.fillna({'SITE_VERS': -1}, inplace=True)
+        comp_df = comp_df.sort_values(by='CD_CARD')
 
         logging.info(
-            f'Comparação de versões finalizada com {len(ic_df)} cards.')
-        ic_df.convert_dtypes()
-        return ic_df.to_dict(orient='records')
+            f'Comparação de versões finalizada com {len(comp_df)} cards.')
+
+        comp_df = comp_df.convert_dtypes()
+
+        return comp_df.to_dict(orient='records')
     except Exception as e:
         logging.error(f'Erro ao processar InfoCards: {e!s}')
         return []
@@ -96,7 +94,7 @@ async def get_all_versions_data(session: Session, token: str) -> list[dict]:
     logging.debug('Iniciando busca de dados de versões de cartões.')
     try:
         async with httpx.AsyncClient(
-            verify=False, timeout=30, limits=httpx.Limits(max_connections=10)
+            verify=False, timeout=30, limits=httpx.Limits(max_connections=2)
         ) as client:
             client.cookies.set('BBSSOToken', token)
             data = await _get_all_info_cards_data(session, client)

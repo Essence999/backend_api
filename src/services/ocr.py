@@ -12,7 +12,7 @@ def get_ocr_cards_data(session: Session, card_type: str):
         df.columns = df.columns.str.upper()
         df['NM_IN_MBZ'] = df['NM_IN_MBZ'].str.strip()
         df['TS_ATU'] = df['TS_ATU'].astype(str)
-        df.convert_dtypes()
+        df = df.convert_dtypes()
         data = df.to_dict(orient='records')
     data = {card_type: data}
 
