@@ -12,33 +12,33 @@ from src.services.versions import get_all_versions_data
 router = APIRouter(prefix='/api')
 
 
-def handle_response(
-    data, error_message: str = 'Dados não retornados.', status_code: int = codes.INTERNAL_SERVER_ERROR
-):
-    """Função auxiliar para padronizar o tratamento de erros."""
-    if not data:
-        raise HTTPException(status_code=status_code, detail=error_message)
-    return data
-
-
 @router.get('/versoes', status_code=codes.OK)
 async def get_versions_data(request: Request, session: Session = Depends(get_db)):
     """Endpoint para mostrar dados dos cartões em JSON."""
     token = request.state.token
     data = await get_all_versions_data(session, token=token)
-    return handle_response(data)
+    if not data:
+        raise HTTPException(
+            status_code=codes.INTERNAL_SERVER_ERROR, detail='Dados não retornados.')
+    return data
 
 
 @router.get('/meta')
 async def get_meta_card_data(session: Session = Depends(get_db)):
     data = get_ocr_cards_data(session, 'meta')
-    return handle_response(data)
+    if not data:
+        raise HTTPException(
+            status_code=codes.INTERNAL_SERVER_ERROR, detail='Dados não retornados.')
+    return data
 
 
 @router.get('/regua')
 async def get_regua_card_data(session: Session = Depends(get_db)):
     data = get_ocr_cards_data(session, 'regua')
-    return handle_response(data)
+    if not data:
+        raise HTTPException(
+            status_code=codes.INTERNAL_SERVER_ERROR, detail='Dados não retornados.')
+    return data
 
 
 @router.put('/meta')
