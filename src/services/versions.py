@@ -32,7 +32,9 @@ async def _get_card_data(card_number: int, client: httpx.AsyncClient) -> dict | 
 
 async def _get_all_cards_data(card_numbers: list[int], client: httpx.AsyncClient) -> list[dict]:
     """Busca dados de vários cards no site."""
+    card_numbers = set(card_numbers)
     logging.info(f'Iniciando busca de dados para {len(card_numbers)} cards.')
+    logging.info(f'Cards: {card_numbers}')
     tasks = [_get_card_data(card, client) for card in card_numbers]
     site_data = await asyncio.gather(*tasks)
     return [item for item in site_data if item is not None]
