@@ -90,9 +90,7 @@ def update_meta_card(session: Session, new_value: float, ind: str, prf: str) -> 
         """
         UPDATE DB2ATB.INFO_CARDS SET VL_META_CARD = :meta, TS_ATU = CURRENT_DATE
         WHERE CD_IND_ATB = :ind AND
-        CD_PRF_CARD = :prf AND
-        REF_AA = YEAR(CURRENT_DATE) AND
-        REF_MM = MONTH(CURRENT_DATE)
+        CD_PRF_CARD = :prf
         """
     )
     params = {'meta': new_value, 'ind': ind, 'prf': prf}
@@ -103,20 +101,16 @@ def update_regua_card(session: Session, vl: float, qt: float, ind: str, prf: str
     """Atualiza os valores de régua de um cartão."""
     vl_query = text(
         """
-        UPDATE DB2ATB.INFO_CARDS SET VL_RGUA_MAX_CARD = :vl, TS_ATU = CURRENT_DATE
+        UPDATE DB2ATB.INFO_CARDS SET VL_RGUA_MAX_CARD_CLTO = :vl, TS_ATU = CURRENT_DATE
         WHERE CD_IND_ATB = :ind AND
-        CD_PRF_CARD = :prf AND
-        REF_AA = YEAR(CURRENT_DATE) AND
-        REF_MM = MONTH(CURRENT_DATE)
+        CD_PRF_CARD = :prf
         """
     )
     qt_query = text(
         """
-        UPDATE DB2ATB.INFO_CARDS SET QT_PTO_FXA_RGUA_CARD = :qt, TS_ATU = CURRENT_DATE
+        UPDATE DB2ATB.INFO_CARDS SET QT_PTO_FXA_RGUA_CARD_CLTO = :qt, TS_ATU = CURRENT_DATE
         WHERE CD_IND_ATB = :ind AND
-        CD_PRF_CARD = :prf AND
-        REF_AA = YEAR(CURRENT_DATE) AND
-        REF_MM = MONTH(CURRENT_DATE)
+        CD_PRF_CARD = :prf
         """
     )
 
