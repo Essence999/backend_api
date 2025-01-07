@@ -76,7 +76,6 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
             columns={'CD_VERS': 'DB_VERS'})
         comp_df['LINK_CARD'] = URL_SITE + comp_df['CD_CARD'].astype(str)
         comp_df.fillna({'SITE_VERS': -1}, inplace=True)
-        comp_df = comp_df.sort_values(by='CD_CARD')
 
         logging.info(
             f'Comparação de versões finalizada com {len(comp_df)} cards.')
@@ -94,7 +93,7 @@ async def get_all_versions_data(session: Session, token: str) -> list[dict]:
     logging.debug('Iniciando busca de dados de versões de cartões.')
     try:
         async with httpx.AsyncClient(
-            verify=False, timeout=30, limits=httpx.Limits(max_connections=2)
+            verify=False, timeout=30, limits=httpx.Limits(max_connections=5)
         ) as client:
             client.cookies.set('BBSSOToken', token)
             data = await _get_all_info_cards_data(session, client)
