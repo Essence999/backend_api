@@ -36,8 +36,8 @@ def get_ocr_meta(session: Session) -> list[dict]:
     """Busca dados de meta OCR."""
     query = text(
         """
-        SELECT VL_META_IN_MBZ, VL_META_CARD, CD_PRF_CARD, CD_IND_ATB,
-        NM_IN_MBZ, AA_APRC, MM_APRC, TS_ATU
+        SELECT VL_META_IN_MBZ as "Meta conexão", VL_META_CARD AS "Meta infocard", CD_PRF_CARD AS "Prefixo", CD_IND_ATB AS "Código indicador",
+        NM_IN_MBZ AS "Nome indicador"
         FROM DB2ATB.VS_DVGA_ATB_CARD
         WHERE OCR_META = 1
         ORDER BY CD_IND_ATB ASC
@@ -50,8 +50,8 @@ def get_regua_cards(session: Session) -> list[dict]:
     """Busca dados de régua OCR."""
     query = text(
         """
-        SELECT RGUA_ATB, RGUA_CARD, CD_PRF_CARD, CD_IND_ATB,
-        NM_IN_MBZ, AA_APRC, MM_APRC, TS_ATU
+        SELECT RGUA_ATB AS "Régua Conexão", RGUA_CARD AS "Régua infocard", CD_PRF_CARD AS "Prefixo", CD_IND_ATB AS "Código indicador",
+        NM_IN_MBZ AS "Nome indicador"
         FROM DB2ATB.VS_DVGA_ATB_CARD
         WHERE OCR_RGUA = 1
         ORDER BY CD_IND_ATB ASC

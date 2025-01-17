@@ -9,9 +9,8 @@ def get_ocr_cards_data(session: Session, card_type: str):
 
     if data:
         df = pd.DataFrame(data)
-        df.columns = df.columns.str.upper()
-        df['NM_IN_MBZ'] = df['NM_IN_MBZ'].str.strip()
-        df['TS_ATU'] = df['TS_ATU'].astype(str)
+        # df.columns = df.columns.str.upper()
+        df['Nome indicador'] = df['Nome indicador'].str.strip()
         df = df.convert_dtypes()
         data = df.to_dict(orient='records')
     data = {card_type: data}
