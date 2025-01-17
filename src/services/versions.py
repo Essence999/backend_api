@@ -89,6 +89,22 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
             f'Comparação de versões finalizada com {len(comp_df)} cards.')
 
         comp_df = comp_df.convert_dtypes()
+        
+        comp_df = comp_df.rename(
+            columns={
+                'CD_CARD' : 'Código card',
+                'NM_CARD' : 'Nome card',
+                'VL_RGUA' : 'Régua vl',
+                'QT_RGUA' : 'Régua qt',
+                'META' : 'Meta',
+                'CD_IND_ATB' : 'Código indicador',
+                'NM_IND_ATB' : 'Nome indicador',
+                'TIP_ACRD' : 'Tipo acordo',
+                'DB_VERS' : 'Versão',
+                'SITE_VERS' : 'Versão site',
+                'LINK_CARD' : 'Link'
+            }
+         )
 
         return comp_df.to_dict(orient='records')
     except Exception as e:
