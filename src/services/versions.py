@@ -23,8 +23,7 @@ async def _get_card_data(card_number: int, client: httpx.AsyncClient) -> dict | 
         logging.debug(f'Dados do card {card_number} obtidos com sucesso')
         return {'CD_CARD': data['id'], 'SITE_VERS': data['versao']}
     except httpx.HTTPStatusError as e:
-        logging.error(
-            f'Erro ao buscar card {card_number}: {e.response.status_code} - {e.response.text}')
+        logging.error(f'Erro ao buscar card {card_number}: {e.response.status_code} - {e.response.text}')
     except httpx.RequestError as e:
         logging.error(f'Erro de conexão ao buscar card {card_number}: {e!s}')
     return None
@@ -45,8 +44,7 @@ async def _compare_versions(db_df: pd.DataFrame, client: httpx.AsyncClient) -> p
     logging.debug('Iniciando comparação de versões.')
     try:
         site_data = await _get_all_cards_data(db_df['CD_CARD'].tolist(), client)
-        logging.info(
-            f'Busca concluída com {len(site_data)} resultados.')
+        logging.info(f'Busca concluída com {len(site_data)} resultados.')
         if not site_data:
             logging.warning('Nenhum dado válido encontrado no site.')
             return pd.DataFrame()
@@ -72,39 +70,38 @@ async def _get_all_info_cards_data(session: Session, client: httpx.AsyncClient) 
             logging.warning('Nenhuma comparação de versões disponível.')
             return []
 
-        comp_df = comp_df.query('CD_VERS != SITE_VERS').rename(
-            columns={'CD_VERS': 'DB_VERS'})
+        comp_df = comp_df.query('CD_VERS != SITE_VERS').rename(columns={'CD_VERS': 'DB_VERS'})
         comp_df = comp_df.rename(
             columns={
                 'CD_VERS': 'DB_VERS',
                 'VL_RGUA_MAX_CARD_CLTO': 'VL_RGUA',
                 'QT_PTO_FXA_RGUA_CARD_CLTO': 'QT_RGUA',
-                'VL_META_CARD': 'META'}
+                'VL_META_CARD': 'META',
+            }
         )
 
         comp_df['LINK_CARD'] = URL_SITE + comp_df['CD_CARD'].astype(str)
         comp_df.fillna({'SITE_VERS': -1}, inplace=True)
 
-        logging.info(
-            f'Comparação de versões finalizada com {len(comp_df)} cards.')
+        logging.info(f'Comparação de versões finalizada com {len(comp_df)} cards.')
 
         comp_df = comp_df.convert_dtypes()
-        
+
         comp_df = comp_df.rename(
             columns={
-                'CD_CARD' : 'Código card',
-                'NM_CARD' : 'Nome card',
-                'VL_RGUA' : 'Régua vl',
-                'QT_RGUA' : 'Régua qt',
-                'META' : 'Meta',
-                'CD_IND_ATB' : 'Código indicador',
-                'NM_IND_ATB' : 'Nome indicador',
-                'TIP_ACRD' : 'Tipo acordo',
-                'DB_VERS' : 'Versão',
-                'SITE_VERS' : 'Versão site',
-                'LINK_CARD' : 'Link'
+                'CD_CARD': 'Código card',
+                'NM_CARD': 'Nome card',
+                'VL_RGUA': 'Régua vl',
+                'QT_RGUA': 'Régua qt',
+                'META': 'Meta',
+                'CD_IND_ATB': 'Código indicador',
+                'NM_IND_ATB': 'Nome indicador',
+                'TIP_ACRD': 'Tipo acordo',
+                'DB_VERS': 'Versão',
+                'SITE_VERS': 'Versão site',
+                'LINK_CARD': 'Link',
             }
-         )
+        )
 
         return comp_df.to_dict(orient='records')
     except Exception as e:
